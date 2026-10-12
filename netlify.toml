@@ -1,0 +1,21 @@
+[build]
+  command = "npm run build"
+  publish = "dist"
+  functions = "netlify/functions"
+[build.environment]
+  NODE_VERSION = "22"
+[functions]
+  node_bundler = "esbuild"
+[[redirects]]
+  from = "/api/progress"
+  to = "/.netlify/functions/progress"
+  status = 200
+  force = true
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+[[headers]]
+  for = "/api/*"
+  [headers.values]
+    Cache-Control = "no-store"

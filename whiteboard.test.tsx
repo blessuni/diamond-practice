@@ -1,0 +1,24 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {JSDOM} from 'jsdom';
+const dom=new JSDOM('<!doctype html><html><body></body></html>',{url:'https://class.example/'});
+Object.assign(globalThis,{window:dom.window,document:dom.window.document,HTMLElement:dom.window.HTMLElement,localStorage:dom.window.localStorage});
+Object.defineProperty(globalThis,'navigator',{value:dom.window.navigator,configurable:true});
+let rows:any[]=[];let writes=0;
+globalThis.fetch=async(_url:any,options:any={})=>{if(options.method==='POST')writes++;return new Response(JSON.stringify({rows,resetVersion:'0'}),{status:200})};
+const React=await import('react');const {render,cleanup,fireEvent,within,waitFor}=await import('@testing-library/react');const {default:App}=await import('../src/App.tsx');
+const row=(group:number,done:number,screen:string,canva=false)=>({group_id:group,device_id:'device-'+group,record_json:JSON.stringify({group,selected:['비공개보석A','비공개보석B'],done:['비공개보석A','비공개보석B'].slice(0,done),screen,canva})});
+test('전자칠판 다섯 단계·선택 내용 비공개·유아 네 모둠만 완료 판단·교사 링크 무변경',async()=>{
+ localStorage.clear();rows=[row(1,1,'oneDone'),row(2,2,'photos'),row(3,2,'upload',true),row(5,2,'upload',true)];writes=0;
+ const app=render(React.createElement(App));const ui=within(app.container);fireEvent.click(ui.getByRole('button',{name:'📊 진행상황 보기'}));const dialog=ui.getByRole('dialog',{name:'전체 진행상황'});
+ await waitFor(()=>assert.equal(dialog.querySelector('[data-group="1"] [data-step="사진2"]')?.getAttribute('data-state'),'current'));
+ assert.doesNotMatch(dialog.textContent!,/비공개보석|표현 중|선택 중/);assert.equal(dialog.querySelectorAll('[data-group]').length,5);
+ assert.equal(dialog.querySelector('[data-group="2"] [data-step="사진확인"]')?.getAttribute('data-state'),'current');assert.equal(dialog.querySelector('[data-group="4"] [data-step="준비"]')?.getAttribute('data-state'),'pending');
+ assert.equal(ui.queryByText('✨ 모든 모둠의 활동이 끝났어요!')===null,true);
+ const link=within(dialog).getByRole('link',{name:'🎨 교사용 Canva 열기'});assert.equal(link.getAttribute('href'),'https://canva.link/lg44g9coxwzxamt');assert.equal(link.getAttribute('target'),'_blank');
+ const snapshot=JSON.stringify({...localStorage});const before=writes;link.addEventListener('click',event=>event.preventDefault());fireEvent.click(link);assert.equal(writes,before);assert.equal(JSON.stringify({...localStorage}),snapshot);
+ rows=[1,2,3,4].map(g=>row(g,2,'upload',true));rows.push(row(5,0,'leader'));fireEvent.click(ui.getByRole('button',{name:'↻ 새로고침'}));await waitFor(()=>assert.equal(!!ui.queryByText('✨ 모든 모둠의 활동이 끝났어요!'),true));assert.equal(!!within(dialog).getByRole('link',{name:'🎨 교사용 Canva 열기'}).closest('.all-ready'),true);assert.equal(dialog.querySelectorAll('.board-children [data-state="done"]').length,20);
+ rows[0]={...row(1,2,'oneDone'),record_json:JSON.stringify({selected:['비공개보석A','비공개보석B'],done:['비공개보석A','비공개보석B'],screen:'oneDone',reviewing:true})};fireEvent.click(ui.getByRole('button',{name:'↻ 새로고침'}));await waitFor(()=>assert.equal(dialog.querySelector('[data-group="1"] [data-step="사진2"]')?.getAttribute('data-state'),'current'));assert.equal(dialog.querySelector('[data-group="1"] [data-step="사진확인"]')?.getAttribute('data-state'),'pending');assert.equal(dialog.querySelector('[data-group="1"] [data-step="Canva"]')?.getAttribute('data-state'),'pending');rows[0]=row(1,2,'upload',true);
+ rows[3]=row(4,2,'upload',false);fireEvent.click(ui.getByRole('button',{name:'↻ 새로고침'}));await waitFor(()=>assert.equal(ui.queryByText('✨ 모든 모둠의 활동이 끝났어요!')===null,true));assert.equal(dialog.querySelector('[data-group="4"] [data-step="Canva"]')?.getAttribute('data-state'),'current');
+});
+test.afterEach(()=>cleanup());test.after(()=>dom.window.close());
