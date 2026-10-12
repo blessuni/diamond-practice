@@ -3,12 +3,12 @@ export function normalizeFlow(r){const done=[...new Set(r.done.filter(v=>r.selec
  // 이전 완료·추가 선택 화면은 새 흐름으로 복원하고 기존 보석 기록은 보존.
  if(x.screen==='finish')x={...x,screen:x.uploaded?'upload':'captured',canva:!!x.uploaded||!!x.canva};
  if(x.screen==='extra')x={...x,screen:capturedAll(x)?'captured':'activity',extra:null};
- if(!capturedAll(x)&&['captured','return','photos','upload','padlet','score','complete'].includes(x.screen))x={...x,screen:done.length?'oneDone':'activity',canva:false};
+ if(!capturedAll(x)&&['captured','return','photos','upload','padlet'].includes(x.screen))x={...x,screen:done.length?'oneDone':'activity',canva:false};
  if(['discussion','director','promise'].includes(x.screen)&&done.length&&!x.reviewing)x.screen=capturedAll(x)?'captured':'oneDone';
  if(['discussion','director','promise'].includes(x.screen)&&x.selected.length!==2)x.screen='select';
  if(x.screen==='oneDone'&&capturedAll(x)&&!x.reviewing)x.screen='captured';
  if(x.screen==='oneDone'&&!done.length)x.screen='activity';
- if(x.canva&&(!capturedAll(x)||!['upload','padlet','score','complete'].includes(x.screen)))x.canva=false;
+ if(x.canva&&(!capturedAll(x)||!['upload','padlet','complete'].includes(x.screen)))x.canva=false;
  delete x.uploaded;return x;}
 export function toggleDone(r,v){if(!r.selected.includes(v))return r;const done=r.done.includes(v)?r.done.filter(x=>x!==v):[...r.done,v];const next={...r,done,canva:false,pending:v,screen:'activity'};delete next.uploaded;return next;}
 export function moveTo(r,screen){return normalizeFlow({...r,screen,extra:null,canva:false,reviewing:['discussion','director','promise','activity','oneDone'].includes(screen)&&!!r.reviewing});}
