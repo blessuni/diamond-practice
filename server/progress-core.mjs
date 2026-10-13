@@ -15,17 +15,18 @@ export async function handleProgress(request,store){
  const headers={'Cache-Control':'no-store','Content-Type':'application/json; charset=utf-8'};
  const reply=(data,status=200)=>new Response(JSON.stringify(data),{status,headers});
  try{
-  const resetMeta=await store.get('meta/reset',{type:'json',consistency:'strong'});const resetVersion=String(resetMeta?.version??'0');
+  const resetMeta=await store.get('meta/reset',{type:'json',consistency:'strong'});const resetVersion=String(resetMeta?.version??'0');const roleMeta=await store.get('meta/role-start',{type:'json',consistency:'strong'});const roleStart=Number.isInteger(roleMeta?.roleStart)&&roleMeta.roleStart>=1&&roleMeta.roleStart<=5?roleMeta.roleStart:1;
   if(request.method==='GET'){
    const {blobs}=await store.list();
    const values=await Promise.all(blobs.filter(b=>/^(child|observer)\//.test(b.key)).map(b=>store.get(b.key,{type:'json',consistency:'strong'})));
    const rows=values.filter(row=>row&&String(row.resetVersion??'0')===resetVersion).map(row=>{const record=normalizeFlow(JSON.parse(row.record_json));return {...row,record_json:JSON.stringify(record),stage:stageOf(record)}}).sort((a,b)=>b.updated_at-a.updated_at);
-   return reply({rows,serverTime:Date.now(),storage:'netlify-blobs',resetVersion});
+   return reply({rows,serverTime:Date.now(),storage:'netlify-blobs',resetVersion,roleStart});
   }
   if(request.method!=='POST')return reply({error:'허용되지 않은 요청'},405);
   if(Number(request.headers.get('content-length')||0)>5000)return reply({error:'기록이 너무 커요'},413);
   const body=await request.text();if(body.length>5000)return reply({error:'기록이 너무 커요'},413);
   let input;try{input=JSON.parse(body)}catch{return reply({error:'기록 형식을 확인해 주세요'},400)}
+  if(input?.action==='setRoleStart'){if(!Number.isInteger(input.roleStart)||input.roleStart<1||input.roleStart>5)return reply({error:'시작 번호는 1~5 중 하나여야 해요'},400);await store.setJSON('meta/role-start',{roleStart:input.roleStart,updatedAt:Date.now()});return reply({ok:true,roleStart:input.roleStart});}
   if(input?.action==='reset'){
    if(String(input.resetVersion??'0')!==resetVersion)return reply({error:'초기화 상태를 다시 확인해 주세요',resetVersion},409);
    const version=Math.max(Date.now(),Number(resetVersion.split('-')[0])+1)+'-'+crypto.randomUUID();await store.setJSON('meta/reset',{version,resetAt:Date.now()});
