@@ -151,3 +151,11 @@ body,button{font-family:'진주둥근글씨','Malgun Gothic','Apple SD Gothic Ne
 .score-stars{display:flex;justify-content:center;gap:clamp(5px,1.2vw,18px);margin:45px auto 35px;flex-wrap:wrap}
 .score-star{border:3px solid #edcb6d;border-radius:22px;background:#fff9e9;color:#bdbdbd;font-size:clamp(42px,6vw,86px);width:clamp(65px,10vw,116px);height:clamp(76px,12vw,134px);cursor:pointer}
 .score-star.active{color:#edb82f;background:#fff0bd;box-shadow:0 6px 0 #d7b35d}
+
+/* 범용 모둠활동: 네 모둠은 2×2, 선생님 시범은 마지막 전체 폭 */
+.group-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+.group-grid .group-choice:nth-child(4){grid-column:2;grid-row:2;border-style:solid;font-size:inherit;padding:22px 20px}
+.group-grid .group-choice:nth-child(5){grid-column:1/-1;grid-row:3;background:#f0e1fc;color:#70409a;border:3px dashed #8856b6}
+.group5{--accent:#7f41a6;--soft:#f0e1fc}
+.practice-symbol5{font-size:clamp(36px,5vw,60px)}
+@media(max-width:699px){.group-grid .group-choice:nth-child(4){font-size:25px;padding:18px 5px}.group-grid .group-choice:nth-child(5){font-size:25px;padding:16px}}
