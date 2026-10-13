@@ -159,3 +159,8 @@ body,button{font-family:'진주둥근글씨','Malgun Gothic','Apple SD Gothic Ne
 .group5{--accent:#7f41a6;--soft:#f0e1fc}
 .practice-symbol5{font-size:clamp(36px,5vw,60px)}
 @media(max-width:699px){.group-grid .group-choice:nth-child(4){font-size:25px;padding:18px 5px}.group-grid .group-choice:nth-child(5){font-size:25px;padding:16px}}
+
+/* 파랑모둠을 다른 색 모둠과 동일한 글씨 크기로 표시 */
+.group-grid .group-choice:nth-child(4){font-size:32px; font-weight:400; padding:22px 20px;}
+@media(max-height:700px) and (min-width:700px){.group-grid .group-choice:nth-child(4){font-size:32px;padding:8px 20px}}
+@media(max-width:699px){.group-grid .group-choice:nth-child(4){font-size:25px;padding:18px 5px}}
