@@ -164,3 +164,14 @@ body,button{font-family:'진주둥근글씨','Malgun Gothic','Apple SD Gothic Ne
 .group-grid .group-choice:nth-child(4){font-size:32px; font-weight:400; padding:22px 20px;}
 @media(max-height:700px) and (min-width:700px){.group-grid .group-choice:nth-child(4){font-size:32px;padding:8px 20px}}
 @media(max-width:699px){.group-grid .group-choice:nth-child(4){font-size:25px;padding:18px 5px}}
+
+/* 가로 태블릿: 작전회의 3항목만 배치하여 확인 버튼이 화면에 들어오도록 */
+.discussion-screen .discussion-check{min-height:48px;padding:7px 12px}
+.discussion-screen .discussion-card{gap:7px}
+@media (orientation:landscape) and (max-height:850px){
+ .discussion-screen .discussion-gems{flex:1;min-height:0;align-items:stretch;margin:6px auto}
+ .discussion-screen .discussion-card{min-height:0;gap:5px}
+ .discussion-screen .discussion-card .gem{min-height:60px;max-height:125px}
+ .discussion-screen .discussion-check{min-height:42px;padding:4px 10px}
+ .discussion-screen .guided-footer{min-height:65px;padding:5px 0}
+}
