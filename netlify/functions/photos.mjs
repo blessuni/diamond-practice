@@ -1,17 +1,29 @@
 import {getStore} from '@netlify/blobs';
 const store=()=>getStore({name:'diamond-class-photos-v1',consistency:'strong'});
 const noCache={'Cache-Control':'no-store'};
+const valid=x=>typeof x==='string'&&/^data:image\/jpeg;base64,[A-Za-z0-9+/=]+$/.test(x)&&x.length<=4500000;
+async function countFor(s,group){
+ const value=await s.get(`group-${group}-photo-count`,{type:'json'});
+ if(Number.isInteger(value?.count)&&value.count>=0)return value.count;
+ // 이전 버전에서 저장한 사진 2장도 그대로 보존합니다.
+ const old=await Promise.all([0,1].map(i=>s.get(`group-${group}-photo-${i}`,{type:'json'})));
+ return old[1]?2:old[0]?1:0;
+}
 export default async function(request){
  try{
   const s=store();
   if(request.method==='POST'){
    const {group,images}=await request.json();
-   if(!Number.isInteger(group)||group<1||group>4||!Array.isArray(images)||images.length!==2||images.some(x=>typeof x!=='string'||!/^data:image\/jpeg;base64,[A-Za-z0-9+/=]+$/.test(x)||x.length>4500000))return Response.json({error:'사진 2장(JPEG)만 전송할 수 있어요.'},{status:400});
-   for(let i=0;i<2;i++)await s.setJSON(`group-${group}-photo-${i}`,{group,index:i,image:images[i],updatedAt:Date.now()});
-   return Response.json({ok:true},{headers:noCache});
+   if(!Number.isInteger(group)||group<1||group>4||!Array.isArray(images)||images.length<1||images.some(x=>!valid(x)))return Response.json({error:'JPEG 사진을 1장 이상 선택해 주세요.'},{status:400});
+   let count=await countFor(s,group);
+   for(const image of images){await s.setJSON(`group-${group}-photo-${count}`,{group,index:count,image,updatedAt:Date.now()});count++}
+   await s.setJSON(`group-${group}-photo-count`,{count});
+   return Response.json({ok:true,count},{headers:noCache});
   }
   if(request.method==='GET'){
-   const photos=(await Promise.all(Array.from({length:8},(_,i)=>s.get(`group-${Math.floor(i/2)+1}-photo-${i%2}`,{type:'json'})))).filter(Boolean);
+   const counts=await Promise.all([1,2,3,4].map(g=>countFor(s,g)));
+   const ids=counts.flatMap((count,g)=>Array.from({length:count},(_,i)=>({group:g+1,index:i})));
+   const photos=(await Promise.all(ids.map(({group,index})=>s.get(`group-${group}-photo-${index}`,{type:'json'})))).filter(Boolean);
    return Response.json({photos},{headers:noCache});
   }
   return Response.json({error:'지원하지 않는 요청'},{status:405});
