@@ -11,9 +11,6 @@ export default async function(request){
    return Response.json({ok:true},{headers:noCache});
   }
   if(request.method==='GET'){
-   const pin=process.env.PHOTO_TEACHER_PIN;
-   if(!pin||pin.length<6)return Response.json({error:'Netlify 환경변수 PHOTO_TEACHER_PIN (6자리 이상)을 설정해 주세요.'},{status:503});
-   if(request.headers.get('x-teacher-pin')!==pin)return Response.json({error:'비밀번호가 일치하지 않아요.'},{status:401});
    const photos=(await Promise.all(Array.from({length:8},(_,i)=>s.get(`group-${Math.floor(i/2)+1}-photo-${i%2}`,{type:'json'})))).filter(Boolean);
    return Response.json({photos},{headers:noCache});
   }
