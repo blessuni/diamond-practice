@@ -1,7 +1,7 @@
 import {getStore} from '@netlify/blobs';
 const store=()=>getStore({name:'diamond-class-photos-v1',consistency:'strong'});
 const noCache={'Cache-Control':'no-store'};
-const valid=x=>typeof x==='string'&&/^data:image\/jpeg;base64,[A-Za-z0-9+/=]+$/.test(x)&&x.length<=4500000;
+const valid=x=>typeof x==='string'&&/^data:image\/(?:jpeg|png|webp);base64,[A-Za-z0-9+/=]+$/.test(x)&&x.length<=4500000;
 async function countFor(s,group){
  const value=await s.get(`group-${group}-photo-count`,{type:'json'});
  if(Number.isInteger(value?.count)&&value.count>=0)return value.count;
@@ -24,7 +24,7 @@ export default async function(request){
     return Response.json({ok:true,photos:[]},{headers:noCache});
    }
    const {group,images}=input;
-   if(!Number.isInteger(group)||group<1||group>4||!Array.isArray(images)||images.length<1||images.some(x=>!valid(x)))return Response.json({error:'JPEG 사진을 1장 이상 선택해 주세요.'},{status:400});
+   if(!Number.isInteger(group)||group<1||group>4||!Array.isArray(images)||images.length<1||images.some(x=>!valid(x)))return Response.json({error:'지원되는 사진(JPG, PNG 등)을 1장 이상 선택해 주세요.'},{status:400});
    let count=await countFor(s,group);
    for(const image of images){await s.setJSON(`group-${group}-photo-${count}`,{group,index:count,image,updatedAt:Date.now()});count++}
    await s.setJSON(`group-${group}-photo-count`,{count});
