@@ -183,3 +183,5 @@ body,button{font-family:'진주둥근글씨','Malgun Gothic','Apple SD Gothic Ne
 
 .activity-select-grid{display:flex;justify-content:center;align-items:center;gap:18px;flex-wrap:wrap;margin:auto 0}.activity-select-grid .gem{min-width:190px;max-width:280px;flex:1}.selection-count{text-align:center;font-size:26px;color:#435d7a;font-weight:700}.select-screen .question{text-align:center}
 @media(max-width:699px){.activity-select-grid .gem{min-width:130px}.selection-count{font-size:21px}}
+
+.photo-gallery-actions{display:flex;flex-wrap:wrap;justify-content:center;gap:12px;margin:12px 0}

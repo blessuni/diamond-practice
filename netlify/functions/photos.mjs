@@ -13,7 +13,17 @@ export default async function(request){
  try{
   const s=store();
   if(request.method==='POST'){
-   const {group,images}=await request.json();
+   const input=await request.json();
+   if(input?.action==='reset'){
+    // 전체 초기화 시 저장된 모든 모둠 사진과 카운트를 실제 삭제합니다.
+    for(const group of [1,2,3,4]){
+     const count=await countFor(s,group);
+     for(let index=0;index<count;index++)await s.delete(`group-${group}-photo-${index}`);
+     await s.delete(`group-${group}-photo-count`);
+    }
+    return Response.json({ok:true,photos:[]},{headers:noCache});
+   }
+   const {group,images}=input;
    if(!Number.isInteger(group)||group<1||group>4||!Array.isArray(images)||images.length<1||images.some(x=>!valid(x)))return Response.json({error:'JPEG 사진을 1장 이상 선택해 주세요.'},{status:400});
    let count=await countFor(s,group);
    for(const image of images){await s.setJSON(`group-${group}-photo-${count}`,{group,index:count,image,updatedAt:Date.now()});count++}

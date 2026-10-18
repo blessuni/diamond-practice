@@ -1,7 +1,7 @@
 import {normalizeFlow,stageOf} from './activity-flow.mjs';
 export {stageOf} from './activity-flow.mjs';
-const groups=Array.from({length:4},()=>['활동 1','활동 2']);
-const screens=['leader','roles','discussion','promise','activity','oneDone','captured','return','photos','upload','padlet','score','complete'];
+const groups=Array.from({length:4},()=>['활동 1','활동 2','활동 3']);
+const screens=['leader','roles','select','sendphoto','discussion','promise','activity','oneDone','captured','return','photos','upload','padlet','score','complete'];
 function validate(x){
  if(!x||typeof x.device!=='string'||!/^[a-zA-Z0-9-]{1,80}$/.test(x.device)||!Number.isInteger(x.group)||x.group<1||x.group>4||x.record?.group!==x.group)return null;
  const r=x.record;const valid=groups[x.group-1];
