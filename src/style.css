@@ -204,3 +204,27 @@ body,button{font-family:'진주둥근글씨','Malgun Gothic','Apple SD Gothic Ne
 .star-reward h2{color:#fff1b5;margin:8px 0;font-size:clamp(20px,3vw,30px)}
 .star-result-screen footer{display:flex;gap:12px;flex-wrap:wrap;justify-content:center}
 @media(max-width:550px){.star-result-grid{gap:9px 11px;padding:0 5%}.star-result-card{padding:24px 14px}}
+
+/* 별빛 결과는 왼쪽 교사 역할 영역을 침범하지 않도록 본문 안에만 표시 */
+.star-result-screen{width:100%;max-width:100%;min-width:0;min-height:0;flex:1;padding:8px 12px 10px;gap:10px;justify-content:flex-start;overflow-y:auto}
+.star-result-card{width:min(100%,740px);max-width:100%;margin:0 auto;padding:15px 20px;border-radius:22px;flex-shrink:0}
+.star-result-card h1{font-size:clamp(20px,2.1vw,29px);margin:0 0 4px}
+.star-result-card>p{font-size:clamp(13px,1.2vw,17px);margin:0}
+.star-result-grid{max-width:520px;gap:5px 10px;margin:13px auto;padding:0 8%;}
+.star-result-star{font-size:clamp(16px,2vw,25px);line-height:1.15}
+.star-meter-label{font-size:clamp(15px,1.5vw,21px);margin:12px 0 8px}
+.star-meter{height:54px}
+.star-ready-panel{padding:9px 0 0}
+.star-ready-panel p{font-size:clamp(14px,1.3vw,18px);margin:10px 0}
+.star-score-status{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}
+.star-score-status span{border-radius:14px;padding:5px 9px;background:#303b63;color:#fff1b5;font-size:clamp(12px,1.1vw,16px)}
+.star-start-button{padding:12px 25px;font-size:22px;margin:3px 8px}
+.star-refresh-button{padding:10px 14px;font-size:15px;margin:3px}
+.star-result-screen footer{flex-shrink:0;margin:0}
+.star-result-screen footer button{font-size:16px;padding:10px 18px;min-height:42px}
+.star-reward{padding:8px 4px 0}
+.star-reward h2{font-size:clamp(19px,2.1vw,27px);margin:3px 0}
+.star-celebration{font-size:26px;animation:star-light-pop .5s ease-out}
+.role-upload-symbol{font-size:46px}
+@media(max-height:850px){.star-result-grid{gap:3px 9px;margin:8px auto}.star-result-card{padding:10px 18px}.star-result-screen{gap:5px}.star-meter{height:54px}}
+@media(max-width:800px){.star-result-card{width:100%;padding:12px}.star-result-grid{padding:0 4%;gap:6px}.star-result-star{font-size:18px}}
