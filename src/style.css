@@ -185,3 +185,22 @@ body,button{font-family:'진주둥근글씨','Malgun Gothic','Apple SD Gothic Ne
 @media(max-width:699px){.activity-select-grid .gem{min-width:130px}.selection-count{font-size:21px}}
 
 .photo-gallery-actions{display:flex;flex-wrap:wrap;justify-content:center;gap:12px;margin:12px 0}
+
+/* 마음보석 별빛 결과 */
+.star-result-screen{min-height:75vh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:24px;padding:20px}
+.star-result-card{background:#141b3c;color:#fff;border-radius:26px;width:min(100%,850px);padding:30px 24px;text-align:center;box-sizing:border-box}
+.star-result-card h1{color:#fff1b5;font-size:clamp(23px,3.3vw,35px);margin:0 0 12px}
+.star-result-card p{color:#ccd5f2}
+.star-result-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:12px 16px;margin:30px auto;padding:0 8%;max-width:680px;justify-items:center}
+.star-result-star{display:block;font-size:clamp(19px,3.4vw,35px);line-height:1.25;color:#34415f;transition:color .16s,transform .2s,text-shadow .2s}
+.star-result-star.lit{color:#ffd700;animation:star-light-pop .35s ease-out,star-twinkle 1.8s ease-in-out infinite alternate;text-shadow:0 0 8px #ffd70088}
+@keyframes star-light-pop{0%{transform:scale(.65)}65%{transform:scale(1.25)}100%{transform:scale(1)}}
+@keyframes star-twinkle{from{text-shadow:0 0 3px #ffd70077}to{text-shadow:0 0 15px #ffe75b}}
+.star-meter-label{display:flex;justify-content:space-between;align-items:center;gap:10px;font-size:clamp(16px,2.6vw,24px);margin:18px 0 10px}
+.star-meter-label strong:last-child{color:#ffd700}
+.star-meter{height:54px;background:#354363;border-radius:999px;overflow:hidden}
+.star-meter-fill{height:100%;background:#ffd700;border-radius:999px;transition:width .2s linear}
+.star-reward{padding:18px 4px 4px;animation:star-light-pop .5s ease-out}
+.star-reward h2{color:#fff1b5;margin:8px 0;font-size:clamp(20px,3vw,30px)}
+.star-result-screen footer{display:flex;gap:12px;flex-wrap:wrap;justify-content:center}
+@media(max-width:550px){.star-result-grid{gap:9px 11px;padding:0 5%}.star-result-card{padding:24px 14px}}
