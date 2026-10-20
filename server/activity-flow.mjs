@@ -3,7 +3,7 @@ export function normalizeFlow(r){const done=[...new Set(r.done.filter(v=>r.selec
  // 이전 완료·추가 선택 화면은 새 흐름으로 복원하고 기존 보석 기록은 보존.
  if(x.screen==='finish')x={...x,screen:x.uploaded?'upload':'captured',canva:!!x.uploaded||!!x.canva};
  if(x.screen==='extra')x={...x,screen:capturedAll(x)?'captured':'activity',extra:null};
- if(!capturedAll(x)&&['captured','return','photos','sendphoto','upload','padlet','score','complete'].includes(x.screen))x={...x,screen:done.length?'oneDone':'activity',canva:false};
+ if(!capturedAll(x)&&['captured','return','photos','sendphoto','upload','padlet'].includes(x.screen))x={...x,screen:done.length?'oneDone':'activity',canva:false};
  if(['discussion','director','promise'].includes(x.screen)&&done.length&&!x.reviewing)x.screen=capturedAll(x)?'captured':'oneDone';
  if(['discussion','director','promise'].includes(x.screen)&&x.selected.length===0)x.screen='select';
  if(x.screen==='oneDone'&&capturedAll(x)&&!x.reviewing)x.screen='captured';
