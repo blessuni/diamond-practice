@@ -230,3 +230,22 @@ body,button{font-family:'진주둥근글씨','Malgun Gothic','Apple SD Gothic Ne
 @media(max-width:800px){.star-result-card{width:100%;padding:12px}.star-result-grid{padding:0 4%;gap:6px}.star-result-star{font-size:18px}}
 
 .general-settings{margin:20px auto;padding:15px;border:2px solid #d6dced;border-radius:16px;max-height:55vh;overflow-y:auto;text-align:left}.general-settings label{display:flex;flex-direction:column;gap:6px;margin:12px 0;font-weight:bold}.general-settings input,.general-settings select{width:100%;padding:11px;border:2px solid #b9c6df;border-radius:10px;font:inherit;color:#172044;background:white}.general-settings-line{display:flex;gap:8px;margin:7px 0}.general-settings-line input{flex:1;min-width:0}.general-settings h3,.general-settings h4{margin:16px 0 8px}.general-settings button{margin:5px 0}.general-settings .primary{width:100%;margin-top:16px}
+
+
+/* 2026-11-24: 사진 선택은 선택 사항 + Canva/Padlet 선택 화면 */
+.share-screen .color-upload { flex-direction:column; gap:8px; margin:0; }
+.share-screen .color-upload p { margin:0; }
+.share-screen .canva-share-button {
+  background:#fff;
+  border:4px solid var(--upload-color, #2fa56b);
+  color:#263751;
+  box-shadow:0 6px 0 color-mix(in srgb, var(--upload-color, #2fa56b) 48%, white);
+}
+.share-screen .canva-share-button .padlet-app-icon { object-fit:contain; }
+.share-screen .padlet-next-button {
+  background:color-mix(in srgb, var(--upload-color, #2fa56b) 17%, white);
+  color:var(--upload-ink, #263751);
+  border:3px solid var(--upload-color, #2fa56b);
+}
+.share-screen .reflection-note { text-align:center; margin:0; }
+.photo-transfer-card .photo-pick-label input { cursor:pointer; }
